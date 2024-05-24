@@ -11,6 +11,12 @@ export class Artist {
 
   @Prop()
   description: string;
+
+  @Prop({
+    required: true,
+    default: false,
+  })
+  isPublished: boolean;
 }
 
 export type ArtistDocument = Artist & Document;

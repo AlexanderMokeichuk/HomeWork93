@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, {Document} from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import { Artist } from './artist.schema';
 
 @Schema()
@@ -19,6 +19,12 @@ export class Album {
 
   @Prop()
   image: string;
+
+  @Prop({
+    required: true,
+    default: false,
+  })
+  isPublished: boolean;
 }
 
 export type AlbumDocument = Album & Document;

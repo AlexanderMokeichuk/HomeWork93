@@ -1,6 +1,7 @@
-import { Prop, Schema } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import mongoose, { Document } from 'mongoose';
 import { Album } from './album.schema';
+import { Artist } from './artist.schema';
 
 @Schema()
 export class Track {
@@ -19,4 +20,13 @@ export class Track {
 
   @Prop({ required: true })
   item: number;
+
+  @Prop({
+    required: true,
+    default: false,
+  })
+  isPublished: boolean;
 }
+
+export type TrackDocument = Artist & Document;
+export const TrackSchema = SchemaFactory.createForClass(Track);
