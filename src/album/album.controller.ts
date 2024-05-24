@@ -16,7 +16,7 @@ import { Album, AlbumDocument } from '../schemas/album.schema';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateAlbumDto } from './create-album.dto';
 
-@Controller('album')
+@Controller('albums')
 export class AlbumController {
   constructor(
     @InjectModel(Album.name)
