@@ -39,13 +39,21 @@ export class TrackController {
 
   @Get()
   async getAll(@Query('album') album: string) {
-    if (album) {
-      const tracksById = await this.trackModel.find({ album: album });
+    try {
+      if (album) {
+        const tracksById = await this.trackModel.find({ album: album });
 
-      return tracksById;
+        if (!tracksById.length) {
+          throw new NotFoundException('Not found tracksById!');
+        }
+
+        return tracksById;
+      }
+
+      return this.trackModel.find();
+    } catch (e) {
+      throw new NotFoundException(e);
     }
-
-    return this.trackModel.find();
   }
 
   @Delete(':id')

@@ -3,8 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpException,
-  HttpStatus,
   NotFoundException,
   Param,
   Post,
@@ -50,11 +48,11 @@ export class ArtistController {
   }
 
   @Get(':id')
-  getByID(@Param('id') id: string) {
+  async getByID(@Param('id') id: string) {
     try {
-      const artist = this.artistModel.findById({ _id: id });
-      if (artist) {
-        throw new NotFoundException('Not authorized');
+      const artist = await this.artistModel.findById({ _id: id });
+      if (!artist) {
+        throw new NotFoundException('Not found artist!');
       }
 
       return artist;

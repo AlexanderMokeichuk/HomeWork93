@@ -58,8 +58,17 @@ export class AlbumController {
   }
 
   @Get(':id')
-  getByID(@Param('id') id: string) {
-    return this.albumModel.findById({ _id: id });
+  async getByID(@Param('id') id: string) {
+    try {
+      const album = await this.albumModel.findById({ _id: id });
+      if (!album) {
+        throw new NotFoundException('Not found album!');
+      }
+
+      return album;
+    } catch (e) {
+      throw new NotFoundException(e);
+    }
   }
 
   @Delete(':id')
