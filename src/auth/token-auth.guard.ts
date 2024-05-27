@@ -14,7 +14,7 @@ export class TokenAuthGuard implements CanActivate {
 
     const headerValue = request.get('Authorization');
 
-    const [, token] = headerValue.split(' ');
+    const [_, token] = headerValue.split(' ');
 
     if (!token) {
       return false;
