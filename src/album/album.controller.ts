@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Query,
+  SetMetadata,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -17,6 +18,7 @@ import { Album, AlbumDocument } from '../schemas/album.schema';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateAlbumDto } from './create-album.dto';
 import { TokenAuthGuard } from '../auth/token-auth.guard';
+import { PermitAuthGuard } from '../auth/permit-auth.guard';
 
 @Controller('albums')
 export class AlbumController {
@@ -61,6 +63,8 @@ export class AlbumController {
   }
 
   @Delete(':id')
+  @UseGuards(TokenAuthGuard, PermitAuthGuard)
+  @SetMetadata('roles', 'admin')
   async deleteArtist(@Param('id') id: string) {
     const result = await this.albumModel.deleteOne({ _id: id });
     if (result.deletedCount === 0) {

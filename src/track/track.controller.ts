@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Query,
+  SetMetadata,
   UseGuards,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -14,6 +15,7 @@ import { Model } from 'mongoose';
 import { Track, TrackDocument } from '../schemas/track.schema';
 import { CreateTrackDto } from './create-track.dto';
 import { TokenAuthGuard } from '../auth/token-auth.guard';
+import { PermitAuthGuard } from '../auth/permit-auth.guard';
 
 @Controller('tracks')
 export class TrackController {
@@ -47,6 +49,8 @@ export class TrackController {
   }
 
   @Delete(':id')
+  @UseGuards(TokenAuthGuard, PermitAuthGuard)
+  @SetMetadata('roles', 'admin')
   async deleteTrack(@Param('id') id: string) {
     const result = await this.trackModel.deleteOne({ _id: id });
     if (result.deletedCount === 0) {

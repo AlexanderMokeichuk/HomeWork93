@@ -3,9 +3,12 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
   NotFoundException,
   Param,
   Post,
+  SetMetadata,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -16,6 +19,7 @@ import { Model } from 'mongoose';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateArtistDto } from './create-artist.dto';
 import { TokenAuthGuard } from '../auth/token-auth.guard';
+import { PermitAuthGuard } from '../auth/permit-auth.guard';
 
 @Controller('artists')
 export class ArtistController {
@@ -47,10 +51,21 @@ export class ArtistController {
 
   @Get(':id')
   getByID(@Param('id') id: string) {
-    return this.artistModel.findById({ _id: id });
+    try {
+      const artist = this.artistModel.findById({ _id: id });
+      if (artist) {
+        throw new NotFoundException('Not authorized');
+      }
+
+      return artist;
+    } catch (e) {
+      throw new NotFoundException(e);
+    }
   }
 
   @Delete(':id')
+  @UseGuards(TokenAuthGuard, PermitAuthGuard)
+  @SetMetadata('roles', 'admin')
   async deleteArtist(@Param('id') id: string) {
     const result = await this.artistModel.deleteOne({ _id: id });
     if (result.deletedCount === 0) {
